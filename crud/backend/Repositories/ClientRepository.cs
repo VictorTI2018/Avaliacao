@@ -4,11 +4,22 @@ using backend.Models;
 
 namespace backend.Repositories {
     public class ClientRepository {
-        public DataTable All () {
+        public List<Client> All () {
+            List<Client> rows = new List<Client> ();
             Client client = new Client ();
-            string sql = "SELECT * FROM clients";
+            Client item;
+            string sql = "SELECT * FROM clients order by id asc";
             DataTable data = client.GetDataTable (sql);
-            return data;
+            for (int i = 0; i < data.Rows.Count; i++) {
+                item = new Client () {
+                    Id = int.Parse (data.Rows[i]["id"].ToString ()),
+                    First_Name = data.Rows[i]["first_name"].ToString (),
+                    Last_Name = data.Rows[i]["last_name"].ToString (),
+                    Cpf_Cnpj = data.Rows[i]["cpf_cnpj"].ToString ()
+                };
+                rows.Add (item);
+            }
+            return rows;
         }
 
         public DataTable find (int id) {

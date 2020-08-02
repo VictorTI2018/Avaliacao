@@ -5,8 +5,14 @@
         <v-icon :icon="icon" />
       </div>
     </header>
-    <aside class="aside"></aside>
-    <main class="content"></main>
+    <aside class="aside" v-show="isToggle">
+      <div class="aside__top">
+        Bebidas Express
+      </div>
+    </aside>
+    <main class="content">
+      <v-data-table :headers="headers" url="/api/client" />
+    </main>
     <footer class="footer"></footer>
   </div>
 </template>
@@ -15,6 +21,15 @@
 import { mapState } from "vuex";
 export default {
   name: "Home",
+  data() {
+    return {
+      data: [{ id: 1, first_name: "Victor Hugo", last_name: "Silva" }],
+      headers: [
+        { label: "#", value: "id" },
+        { label: "Nome", value: "first_Name" },
+      ],
+    };
+  },
   computed: {
     ...mapState(["isToggle"]),
     icon() {
@@ -65,9 +80,22 @@ export default {
   background-color: var(--dark-color);
 }
 
+.aside__top {
+  height: 50px;
+  border-bottom: 1px solid var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white-color);
+  font-weight: bold;
+}
+
 .content {
   grid-area: content;
+  height: calc(100vh - 110px);
+  padding: 25px;
   background-color: var(--bg-color);
+  overflow-y: scroll;
 }
 .footer {
   grid-area: footer;
