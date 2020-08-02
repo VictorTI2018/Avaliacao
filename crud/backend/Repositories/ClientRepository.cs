@@ -15,25 +15,58 @@ namespace backend.Repositories {
                     Id = int.Parse (data.Rows[i]["id"].ToString ()),
                     First_Name = data.Rows[i]["first_name"].ToString (),
                     Last_Name = data.Rows[i]["last_name"].ToString (),
-                    Cpf_Cnpj = data.Rows[i]["cpf_cnpj"].ToString ()
+                    Cpf_Cnpj = data.Rows[i]["cpf_cnpj"].ToString (),
+                    Phone_Number = data.Rows[0]["phone_number"].ToString (),
+                    Type_Number = data.Rows[0]["type_number"].ToString (),
+                    Type_Address = data.Rows[0]["type_address"].ToString (),
+                    Type_Person = data.Rows[0]["type_person"].ToString (),
+                    Address = data.Rows[0]["address"].ToString (),
+                    Zip_Code = data.Rows[0]["zip_code"].ToString (),
+                    Number = data.Rows[0]["number"].ToString (),
+                    Complement = data.Rows[0]["complement"].ToString (),
+                    Neighborhood = data.Rows[0]["neighborhood"].ToString (),
+                    City = data.Rows[0]["city"].ToString (),
+                    UF = data.Rows[0]["uf"].ToString ()
                 };
                 rows.Add (item);
             }
             return rows;
         }
 
-        public DataTable find (int id) {
+        public Client find (int id) {
             Client client = new Client ();
-            string sql = "SELECT * FROM clients WHERE id = " + id;
+            Client item;
+            string sql = "SELECT * FROM clients WHERE id = " + id + " order by id asc";
             DataTable data = client.GetDataTable (sql);
-            return data;
+            item = new Client () {
+                Id = int.Parse (data.Rows[0]["id"].ToString ()),
+                First_Name = data.Rows[0]["first_name"].ToString (),
+                Last_Name = data.Rows[0]["last_name"].ToString (),
+                Cpf_Cnpj = data.Rows[0]["cpf_cnpj"].ToString (),
+                Phone_Number = data.Rows[0]["phone_number"].ToString (),
+                Type_Number = data.Rows[0]["type_number"].ToString (),
+                Address = data.Rows[0]["address"].ToString (),
+                Type_Address = data.Rows[0]["type_address"].ToString (),
+                Type_Person = data.Rows[0]["type_person"].ToString (),
+                Zip_Code = data.Rows[0]["zip_code"].ToString (),
+                Number = data.Rows[0]["number"].ToString (),
+                Complement = data.Rows[0]["complement"].ToString (),
+                Neighborhood = data.Rows[0]["neighborhood"].ToString (),
+                City = data.Rows[0]["city"].ToString (),
+                UF = data.Rows[0]["uf"].ToString ()
+            };
+            return item;
         }
 
-        public bool save () {
+        public void save () {
             Client client = new Client ();
-            string query = "INSERT INTO clients(first_name, last_name, cpf_cnpj, type_person) " +
-                $"VALUES({client.First_Name}, {client.Last_Name}, {client.Cpf_Cnpj}, {client.Type_Person})";
-            return client.ExecuteSQL (query);
+            string query = "INSERT INTO `clients`(first_name, last_name, cpf_cnpj, " +
+                "type_person, phone_number, type_number, address, zip_code, neighborhood, complement, city, uf, number)" +
+                $"VALUES('{client.First_Name}','{client.Last_Name}', '{client.Cpf_Cnpj}', " +
+                $" '{client.Type_Person}', '{client.Phone_Number}', '{client.Type_Number}'," +
+                $" '{client.Address}', '{client.Zip_Code}', '{client.Neighborhood}', " +
+                $"'{client.Complement}', '{client.City}', '{client.UF}', '{client.Number}')";
+            client.ExecuteSQL (query);
         }
     }
 }

@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="row" v-if="filter">
-      <v-text-field
-        icon="search"
-        placeholder="Digite para buscar"
-        v-model="search"
-      />
+      <div class="col-md-12">
+        <v-text-field
+          icon="search"
+          placeholder="Digite para buscar"
+          v-model="search"
+        />
+      </div>
     </div>
     <table class="table table-striped table-hover">
       <thead>
@@ -73,6 +75,7 @@ export default {
       this.$http
         .get(this.url)
         .then((res) => {
+          console.log(res)
           this.items = res.data;
         })
         .catch((err) => {
@@ -93,7 +96,8 @@ export default {
 </script>
 
 <style>
-.table tr,th {
+.table tr,
+th {
   text-align: center;
 }
 </style>

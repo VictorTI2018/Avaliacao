@@ -26,7 +26,7 @@ const routes = [
       {
         path: "/new-client",
         name: "new-client",
-        component: Clients,
+        component: NewClient,
         meta: { title: "Novo Cliente" },
       },
     ],

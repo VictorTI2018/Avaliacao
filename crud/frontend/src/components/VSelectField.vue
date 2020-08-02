@@ -2,30 +2,26 @@
   <div class="input-group mb-3">
     <div class="input-group-prepend">
       <span class="input-group-text">
-        <v-icon v-if="icon" :icon="icon" />
+        <v-icon :icon="icon" />
       </span>
     </div>
-    <input
-      :type="type"
-      class="form-control"
-      :placeholder="placeholder"
-      v-model="v_value"
-       v-on:blur="$emit('blur', $event.target.value)"
-    />
+    <select class="form-control" v-model="v_value">
+      <slot />
+    </select>
   </div>
 </template>
 
 <script>
 export default {
-  name: "VTextField",
+  name: "VSelectField",
   props: {
     value: {
       type: [Number, String, Object, Array, null],
     },
-    placeholder: String,
-    type: String,
+    options: [Array, Object, null],
+    itemKey: String,
+    itemValue: String,
     icon: String,
-    onBlur: Function
   },
   data() {
     return {

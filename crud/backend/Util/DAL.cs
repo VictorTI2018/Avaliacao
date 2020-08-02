@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 namespace backend.Util {
@@ -9,7 +10,7 @@ namespace backend.Util {
         private MySqlConnection Connection;
 
         private static string getConnectionString () {
-            return $"Server={Server};Database={Database};Uid={User};Pwd={Password};Sslmode=none";
+            return $"Server={Server};Database={Database};Uid={User};Pwd={Password};Sslmode=none;Connection Timeout=4200";
         }
 
         public DAL () {
@@ -18,13 +19,13 @@ namespace backend.Util {
         }
 
         /** Executar Querys **/
-        public bool ExecuteSQL (string query) {
+        public void ExecuteSQL (string query) {
             MySqlCommand Command = new MySqlCommand (query, Connection);
-            return Command.ExecuteNonQuery ()  > 0 ;
+            Command.ExecuteNonQuery ();
         }
 
         //Retornar dados do banco
-        public DataTable GetDataTable (string query) {
+        public DataTable GetDataTable (string query, int currentIndex = 0, int pageSize = 5) {
             MySqlCommand Command = new MySqlCommand (query, Connection);
             MySqlDataAdapter DataAdapter = new MySqlDataAdapter (Command);
             DataTable data = new DataTable ();
