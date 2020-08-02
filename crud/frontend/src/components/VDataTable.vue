@@ -75,7 +75,6 @@ export default {
       this.$http
         .get(this.url)
         .then((res) => {
-          console.log(res)
           this.items = res.data;
         })
         .catch((err) => {
