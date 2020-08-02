@@ -7,9 +7,11 @@ import {
   faBan,
   faUser,
   faFont,
+  faBars,
+  faAngleLeft
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faSave, faEdit, faTrash, faBan, faUser, faFont);
+library.add(faSave, faEdit, faTrash, faBan, faUser, faFont, faBars, faAngleLeft);
 
 Vue.component("v-icon", FontAwesomeIcon);
