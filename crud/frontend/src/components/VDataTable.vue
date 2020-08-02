@@ -1,19 +1,11 @@
 <template>
   <div>
-    <div class="row">
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="basic-addon1">
-            <v-icon icon="search" />
-          </span>
-        </div>
-        <input
-          type="searh"
-          class="form-control"
-          placeholder="Digite para buscar"
-          v-model="search"
-        />
-      </div>
+    <div class="row" v-if="filter">
+      <v-text-field
+        icon="search"
+        placeholder="Digite para buscar"
+        v-model="search"
+      />
     </div>
     <table class="table table-striped table-hover">
       <thead>
@@ -21,11 +13,15 @@
           <th v-for="(header, index) in headers" :key="index">
             {{ header.label }}
           </th>
+          <th v-if="action">Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in filtered" :key="index">
           <td v-for="(h, key) in headers" :key="key">{{ item[h.value] }}</td>
+          <td v-if="action">
+            <slot name="item" v-bind:item="{ item }" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -95,3 +91,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.table tr,th {
+  text-align: center;
+}
+</style>

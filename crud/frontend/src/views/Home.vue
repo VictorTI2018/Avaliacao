@@ -9,9 +9,20 @@
       <div class="aside__top">
         Bebidas Express
       </div>
+      <div class="aside__topnav">
+        <router-link
+          class="link"
+          v-for="(item, index) in menu"
+          :key="index"
+          :to="item.to"
+        >
+          <v-icon :icon="item.icon" />
+          {{ item.text }}
+        </router-link>
+      </div>
     </aside>
     <main class="content">
-      <v-data-table :headers="headers" url="/api/client" />
+      <router-view></router-view>
     </main>
     <footer class="footer"></footer>
   </div>
@@ -21,24 +32,22 @@
 import { mapState } from "vuex";
 export default {
   name: "Home",
-  data() {
-    return {
-      data: [{ id: 1, first_name: "Victor Hugo", last_name: "Silva" }],
-      headers: [
-        { label: "#", value: "id" },
-        { label: "Nome", value: "first_Name" },
-      ],
-    };
-  },
   computed: {
     ...mapState(["isToggle"]),
     icon() {
       return !this.isToggle ? "bars" : "angle-left";
     },
+    menu() {
+      return [{ icon: "user", ...this.menuName("clients") }];
+    },
   },
   methods: {
     toggleMenu() {
       this.$store.commit("setToggle");
+    },
+    menuName(name) {
+      const route = this.$router.resolve({ name }).route;
+      return { to: route.path, text: route.meta.title };
     },
   },
 };
@@ -88,6 +97,27 @@ export default {
   justify-content: center;
   color: var(--white-color);
   font-weight: bold;
+}
+
+.aside__topnav {
+  overflow: hidden;
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+}
+
+.aside__topnav .link {
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  width: 100%;
+}
+
+.aside__topnav .link:hover {
+  border-left: 6px solid var(--primary-color);
+  border-right: 6px solid var(--primary-color);
 }
 
 .content {

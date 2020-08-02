@@ -1,21 +1,42 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
+import Home from "../views/Home.vue";
+import Clients from "../views/Client/Clients";
+import NewClient from "../views/Client/NewClient";
 
-  const routes = [
+Vue.use(VueRouter);
+
+const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
-  }
-]
+    path: "/",
+    name: "Home",
+    component: Home,
+    children: [
+      {
+        path: "/",
+        redirect: "/clients",
+      },
+      {
+        path: "/clients",
+        name: "clients",
+        component: Clients,
+        meta: { title: "Clientes" },
+      },
+      {
+        path: "/new-client",
+        name: "new-client",
+        component: Clients,
+        meta: { title: "Novo Cliente" },
+      },
+    ],
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
