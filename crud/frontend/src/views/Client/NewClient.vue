@@ -8,7 +8,7 @@
             icon="font"
             placeholder="Digite seu nome..."
             title="Digite seu nome"
-            v-model="model.First_Name"
+            v-model="model.first_Name"
           />
         </div>
         <div class="col-md-4 col-lg-4 col-sm-12">
@@ -16,14 +16,14 @@
             icon="font"
             placeholder="Digite seu sobrenome..."
             title="Digite seu sobrenome"
-            v-model="model.Last_Name"
+            v-model="model.last_Name"
           />
         </div>
         <div class="col-md-3 col-lg-3 col-sm-12">
           <v-select-field
             icon="user"
             :options="type_person"
-            v-model="model.Type_Person"
+            v-model="model.type_Person"
             title="Pessoa Fisica ou Juridica"
           >
             <option
@@ -41,7 +41,7 @@
             icon="id-card"
             placeholder="Cpf/Cnpj"
             v-mask="['###.###.###-##', '##.###.###/####-##']"
-            v-model="model.Cpf_Cnpj"
+            v-model="model.cpf_Cnpj"
             title="Digite seu documento"
           />
         </div>
@@ -50,7 +50,7 @@
             type="tel"
             v-mask="['(##) ####-####', '(##) #####-####']"
             icon="phone"
-            v-model="model.Phone_Number"
+            v-model="model.phone_Number"
             placeholder="(##) #####-####"
             title="Digite seu celular"
           />
@@ -59,7 +59,7 @@
           <v-select-field
             icon="phone"
             :options="type_person"
-            v-model="model.Type_Number"
+            v-model="model.type_Number"
             title="Tipo de Telefone"
           >
             <option
@@ -78,7 +78,7 @@
             icon="shipping-fast"
             placeholder="#####-###"
             v-mask="'#####-###'"
-            v-model="model.Zip_Code"
+            v-model="model.zip_Code"
             title="CEP"
             @blur="getAddress"
           />
@@ -87,7 +87,7 @@
           <v-text-field
             placeholder="Logradouro"
             icon="map"
-            v-model="model.Address"
+            v-model="model.address"
             title="Logradouro"
           />
         </div>
@@ -95,7 +95,7 @@
           <v-text-field
             placeholder="N°"
             icon="sort-numeric-up-alt"
-            v-model="model.Number"
+            v-model="model.number"
             title="Número da residencia"
           />
         </div>
@@ -105,7 +105,7 @@
           <v-text-field
             placeholder="Bairro..."
             icon="map"
-            v-model="model.Neighborhood"
+            v-model="model.neighborhood"
             title="Bairro"
           />
         </div>
@@ -113,7 +113,7 @@
           <v-text-field
             placeholder="Complemento"
             icon="map-marked"
-            v-model="model.Complement"
+            v-model="model.complement"
             title="Complemento"
           />
         </div>
@@ -124,7 +124,7 @@
             icon="city"
             placeholder="Cidade..."
             title="Cidade"
-            v-model="model.City"
+            v-model="model.city"
           />
         </div>
         <div class="col-md-3 col-lg-2 col-sm-12">
@@ -132,7 +132,7 @@
             icon="city"
             placeholder="UF"
             title="Estado"
-            v-model="model.UF"
+            v-model="model.uf"
           />
         </div>
       </div>
@@ -152,7 +152,7 @@
             title="Salvar Dados"
             @click="handleSubmit"
           >
-            <v-icon icon="save" />
+            <v-icon :icon="model.id > 0 ? 'edit' : 'save'" />
           </button>
         </div>
       </div>
@@ -168,19 +168,19 @@ export default {
     return {
       model: {
         id: 0,
-        First_Name: "",
-        Last_Name: "",
-        Type_Person: "",
-        Cpf_Cnpj: "",
-        Phone_Number: "",
-        Type_Number: "",
-        Zip_Code: "",
-        Address: "",
-        Neighborhood: "",
-        Number: 0,
-        Complement: "",
-        City: "",
-        UF: "",
+        first_Name: "",
+        last_Name: "",
+        type_Person: "",
+        cpf_Cnpj: "",
+        phone_Number: "",
+        type_Number: "",
+        zip_Code: "",
+        address: "",
+        neighborhood: "",
+        number: 0,
+        complement: "",
+        city: "",
+        uf: "",
       },
       type_person: [
         { label: "Fisica", value: "fisica" },
@@ -201,55 +201,76 @@ export default {
         .catch((err) => console.error(err));
     },
     handleSubmit() {
-      if (this.model.First_Name && this.model.Last_Name) {
-        this.$http
-          .post("/api/client", this.model)
-          .then((res) => console.log(res.data))
+      if (this.model.first_Name && this.model.last_Name) {
+        let res;
+        if (this.model.id > 0) {
+          res = this.$http.put(`/api/client/edit/${this.model.id}`, this.model);
+        } else {
+          res = this.$http.post("/api/client", this.model);
+        }
+        res
+          .then((res) => {
+            if (res.data.result) {
+              alert(
+                `${
+                  this.model.id > 0
+                    ? "Cliente atualizado com sucesso"
+                    : "Cliente cadastrado com sucesso"
+                }`
+              );
+              this.$router.back();
+            } else {
+              console.error(res.data.errorMessage);
+            }
+          })
           .catch((err) => console.error(err));
       } else {
         alert("Por favor Informe seu nome e sobrenome");
       }
     },
     getAddress() {
-      axios.get(`https://viacep.com.br/ws/${this.model.Zip_Code}/json/`).then((res) => {
-        this.model.Zip_Code = res.data.cep;
-        this.model.City = res.data.localidade;
-        this.model.UF = res.data.uf;
-        this.model.Neighborhood = res.data.bairro;
-        this.model.Address = res.data.logradouro
-      });
+      if (this.model.zip_Code) {
+        axios
+          .get(`https://viacep.com.br/ws/${this.model.zip_Code}/json/`)
+          .then((res) => {
+            this.model.zip_Code = res.data.cep;
+            this.model.city = res.data.localidade;
+            this.model.uf = res.data.uf;
+            this.model.neighborhood = res.data.bairro;
+            this.model.address = res.data.logradouro;
+          });
+      }
     },
     setModel(data) {
       console.log(data);
       this.model.id = data.id;
-      this.model.First_Name = data.first_Name;
-      this.model.Last_Name = data.last_Name;
-      this.model.Cpf_Cnpj = data.cpf_Cnpj;
-      this.model.Phone_Number = data.phone_Number;
-      this.model.Type_Person = data.type_Person;
-      this.model.Address = data.address;
-      this.model.Number = data.number;
-      this.model.Type_Number = data.type_Number;
-      this.model.Zip_Code = data.zip_Code;
-      this.model.City = data.city;
-      this.model.UF = data.uf;
-      this.model.Neighborhood = data.neighborhood;
+      this.model.first_Name = data.first_Name;
+      this.model.last_Name = data.last_Name;
+      this.model.cpf_Cnpj = data.cpf_Cnpj;
+      this.model.phone_Number = data.phone_Number;
+      this.model.type_Person = data.type_Person;
+      this.model.address = data.address;
+      this.model.number = data.number;
+      this.model.type_Number = data.type_Number;
+      this.model.zip_Code = data.zip_Code;
+      this.model.city = data.city;
+      this.model.uf = data.uf;
+      this.model.neighborhood = data.neighborhood;
     },
     clearModel() {
       if (confirm("Deseja realmente limpar o formulário?")) {
-        this.model.id = "";
-        this.model.First_Name = "";
-        this.model.Last_Name = "";
-        this.model.Cpf_Cnpj = "";
-        this.model.Phone_Number = "";
-        this.model.Type_Person = "";
-        this.model.Address = "";
-        this.model.Number = "";
-        this.model.Type_Number = "";
-        this.model.Zip_Code = "";
-        this.model.City = "";
-        this.model.UF = "";
-        this.model.Neighborhood = "";
+        this.model.first_Name = "";
+        this.model.last_Name = "";
+        this.model.cpf_Cnpj = "";
+        this.model.phone_Number = "";
+        this.model.type_Person = "";
+        this.model.address = "";
+        this.model.number = "";
+        this.model.type_Number = "";
+        this.model.zip_Code = "";
+        this.model.city = "";
+        this.model.uf = "";
+        this.model.neighborhood = "";
       }
     },
   },

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using backend.Core;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -23,13 +25,49 @@ namespace backend.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Post ([FromBody] Client value) {
-            ClientRepository clientRepo = new ClientRepository ();
-            clientRepo.save ();
-            return Json(new {
-                Response = "OK",
-                Message = "Criado com sucesso"
-            });
+        public Message Post ([FromBody] Client value) {
+            Message response = new Message ();
+            try {
+                ClientRepository clientRepo = new ClientRepository ();
+                clientRepo.save (value);
+                response.Result = true;
+                response.ErrorMessage = string.Empty;
+            } catch (Exception e) {
+                response.Result = false;
+                response.ErrorMessage = "Erro ao registrar um novo cliente: " + e.Message;
+            }
+            return response;
+        }
+
+        [HttpPut]
+        [Route ("/api/client/edit/{id}")]
+        public Message Put (int id, [FromBody] Client value) {
+            Message response = new Message ();
+            try {
+                ClientRepository clientRepo = new ClientRepository ();
+                clientRepo.edit (id, value);
+                response.Result = true;
+                response.ErrorMessage = string.Empty;
+            } catch (Exception e) {
+                response.Result = false;
+                response.ErrorMessage = "Erro ao atualizar um  cliente: " + e.Message;
+            }
+            return response;
+        }
+
+        [HttpDelete ("{id}")]
+        public Message Delete (int id) {
+            Message response = new Message ();
+            try {
+                ClientRepository clientRepo = new ClientRepository ();
+                clientRepo.remove (id);
+                response.Result = true;
+                response.ErrorMessage = string.Empty;
+            } catch (Exception e) {
+                response.Result = false;
+                response.ErrorMessage = "Erro ao excluir um  cliente: " + e.Message;
+            }
+            return response;
         }
     }
 }

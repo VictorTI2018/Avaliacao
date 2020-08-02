@@ -2,23 +2,23 @@ using backend.Util;
 
 namespace backend.Models {
     public class Client : DAL {
-        public int Id { get; set; }
-        public string First_Name { get; set; }
-        public string Last_Name { get; set; }
-        public string Cpf_Cnpj { get; set; }
-        public string Phone_Number { get; set; }
-        public string Type_Number { get; set; }
-        public string Address { get; set; }
-        public string Zip_Code { get; set; }
-        public string Number { get; set; }
-        public string Complement { get; set; }
+        public int id { get; set; }
+        public string first_Name { get; set; }
+        public string last_Name { get; set; }
+        public string cpf_Cnpj { get; set; }
+        public string phone_Number { get; set; }
+        public string type_Number { get; set; }
+        public string address { get; set; }
+        public string zip_Code { get; set; }
+        public string number { get; set; }
+        public string complement { get; set; }
 
-        public string Neighborhood { get; set; }
-        public string City { get; set; }
-        public string UF { get; set; }
-        public string Type_Address { get; set; }
+        public string neighborhood { get; set; }
+        public string city { get; set; }
+        public string uf { get; set; }
+        public string type_Address { get; set; }
 
-        public string Type_Person { get; set; }
+        public string type_Person { get; set; }
 
     }
 }
